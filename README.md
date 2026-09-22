@@ -64,7 +64,7 @@ Unknown distributions and OSTree-based atomic systems are rejected. This is not 
 - `pkexec` and a desktop PolicyKit authentication agent for removal.
 - For non-APT removal: GNOME Terminal, Konsole, Xfce Terminal, MATE Terminal or xterm.
 
-No dependencies are automatically installed. Run the GUI as your regular user, not with `sudo`.
+On startup, the launcher checks the required Python and GTK libraries. If any are missing, it uses the host's native package manager and requests administrator authorization to install only the missing packages. Run the GUI as your regular user, not with `sudo`.
 
 ## Run
 
@@ -74,6 +74,14 @@ Download or clone the repository, then run from its directory:
 chmod +x start
 ./start
 ```
+
+On a server or another system without a graphical session, `./start` automatically opens the terminal interface. You can select it explicitly from any terminal:
+
+```sh
+./start --tui
+```
+
+The terminal interface mirrors the installed-applications, all-packages, restore-points, language and help views. Use the arrow keys to navigate, `Space` to select packages and `P` to preview a cleanup. It works over SSH when a terminal is allocated (for example, `ssh -t host`). Run it as your regular user; it uses `sudo` or `doas` only after you review and confirm a removal plan.
 
 To add a desktop-menu entry:
 
@@ -96,7 +104,7 @@ touch portable.mode
 ./start
 ```
 
-Portable settings and restore points are stored in `portable-data/`, separately for each machine. The directory must be writable. This is portable source code, **not a self-contained AppImage**: host libraries are still required.
+Portable settings and restore points are stored in `portable-data/`, separately for each machine. The directory must be writable. This is portable source code, **not a self-contained AppImage**: required host libraries are checked and, when missing, installed through the native package manager.
 
 ## Restore points
 
